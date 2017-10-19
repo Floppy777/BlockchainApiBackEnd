@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.indo.blockchain.json.PlayerJson;
+import com.indo.blockchain.exception.BeneficiaryJson;
 import com.indo.blockchain.model.User;
 import com.indo.blockchain.service.UserService;
 
@@ -39,10 +39,10 @@ public class UserApi {
 	}
 
 	@RequestMapping(value = "/player/create", method = RequestMethod.POST)
-	public ResponseEntity<Void> createUserPlayer(@RequestBody PlayerJson playerJson) {
-		System.out.println(playerJson);
+	public ResponseEntity<Void> createUserPlayer(@RequestBody BeneficiaryJson beneficiaryJson) {
+		System.out.println(beneficiaryJson);
 		try {
-			userService.createUserPlayer(playerJson);
+			userService.createUserPlayer(beneficiaryJson);
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (ParseException e) {
 			e.printStackTrace();

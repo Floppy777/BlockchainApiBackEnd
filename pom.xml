@@ -1,45 +1,55 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>ApiBackEnd</groupId>
-  <artifactId>ApiBackEnd</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ApiBackEnd</groupId>
+	<artifactId>ApiBackEnd</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-	 <parent> <groupId>org.springframework.boot</groupId>
- 
-      <artifactId>spring-boot-starter-parent</artifactId>
-      <version>1.1.4.RELEASE</version>
-   </parent>
-   <dependencies>
-   	  <dependency>
-   	  	<groupId>org.springframework</groupId>
-   	  	<artifactId>spring-web</artifactId>
-   	  </dependency>	
-      <dependency> 
-      	 <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
-      	<dependency>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.1.4.RELEASE</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		 
+
 		<dependency>
-  			<groupId>org.springframework.boot</groupId>
-  			<artifactId>spring-boot-starter-security</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- Eth Web3 -->
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<!-- Mysql -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<!-- Json Write -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-		
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -51,106 +61,91 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-	<dependency>
-    <groupId>com.fasterxml.jackson.datatype</groupId>
-    <artifactId>jackson-datatype-hibernate4</artifactId>
-    <version>2.9.1</version>
-</dependency>
-			
-      </dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate4</artifactId>
+			<version>2.9.1</version>
+		</dependency>
 
-   
-<!--
-   <distributionManagement>
-    <repository>
-      <id>blockchainDev</id>
-      <url>scp://betsareoff.com:/home/blockchain/JavaBack</url>
-    </repository>
-  </distributionManagement>
- 
-   <build>
-   <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh</artifactId>
-        <version>2.12</version>
-      </extension>
-    </extensions>
--->
-    
-    <build>
-      <plugins>
+	</dependencies>
 
-	 <!-- =========================================== -->
-    <plugin>
-    <inherited>false</inherited>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-antrun-plugin</artifactId>
-    <version>1.6</version>
-    <executions>
-        <execution>
-            <id>Push Jar to Dev server</id>
-            <phase>install</phase>
-            <goals>
-                <goal>run</goal>
-            </goals>
-            <configuration>
-                <target name="Deploy Jar.." description="how to get antrun plugin to work with SCP and SSH">
-                    <!-- file to be transferred -->
-                    <scp trust="true" failonerror="true" verbose="off" sftp="true" 
-                        file="target/${project.groupId}-${project.version}.jar"
-                        todir="blockchain:yXz6Pd@betsareoff.com:/home/blockchain/JavaBack" />
-                    <!-- remote host and the command to be executed there 
-                    <sshexec trust="true" failonerror="true"
-                        host="betsareoff.com"
-                        username="blockchain"
-                        password="yXz6Pd"
-                        command=""
-                        timeout="120000" /> -->
-                    <taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp">
-                        <classpath refid="maven.plugin.classpath" />
-                    </taskdef>
-                </target>
-            </configuration>
-        </execution>
-    </executions>
-    <dependencies>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant-commons-net</artifactId>
-            <version>1.6.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-jsch</artifactId>
-            <version>1.9.1</version>
-        </dependency>
-    </dependencies>
-</plugin>
-       	<plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-        
-        <plugin>
-        	<groupId>com.spotify</groupId>
-        	<artifactId>docker-maven-plugin</artifactId>
-        	<version>0.4.13</version>
-        	<configuration>
-        		<imageName>back-web</imageName>
-        		<dockerDirectory>src/main/docker</dockerDirectory>
-        		<resources>
-        			<resource>
-        				<targetPath>/</targetPath>
-        				<directory>${project.build.directory}</directory>
-        				<include>${project.build.finalName}.jar</include>
-        			</resource>
-        		</resources>
-        	</configuration>
-        </plugin>  
-         
-      </plugins>
-      
-   </build>
-   
+
+	<!-- <distributionManagement> <repository> <id>blockchainDev</id> <url>scp://betsareoff.com:/home/blockchain/JavaBack</url> 
+		</repository> </distributionManagement> <build> <extensions> <extension> 
+		<groupId>org.apache.maven.wagon</groupId> <artifactId>wagon-ssh</artifactId> 
+		<version>2.12</version> </extension> </extensions> -->
+
+	<build>
+		<plugins>
+
+			<!-- =========================================== -->
+			<plugin>
+				<inherited>false</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>Push Jar to Dev server</id>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="Deploy Jar.."
+								description="how to get antrun plugin to work with SCP and SSH">
+								<!-- file to be transferred -->
+								<scp trust="true" failonerror="true" verbose="off" sftp="true"
+									file="target/${project.groupId}-${project.version}.jar"
+									todir="blockchain:yXz6Pd@betsareoff.com:/home/blockchain/JavaBack" />
+								<!-- remote host and the command to be executed there <sshexec trust="true" 
+									failonerror="true" host="betsareoff.com" username="blockchain" password="yXz6Pd" 
+									command="" timeout="120000" /> -->
+								<taskdef name="scp"
+									classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp">
+									<classpath refid="maven.plugin.classpath" />
+								</taskdef>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-commons-net</artifactId>
+						<version>1.6.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-jsch</artifactId>
+						<version>1.9.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.4.13</version>
+				<configuration>
+					<imageName>back-web</imageName>
+					<dockerDirectory>src/main/docker</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
 </project>

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.indo.blockchain.json.PlayerJson;
+import com.indo.blockchain.exception.BeneficiaryJson;
 import com.indo.blockchain.model.Account;
 import com.indo.blockchain.model.Role;
 import com.indo.blockchain.model.User;
@@ -27,10 +27,10 @@ public class UserService {
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	
-	public void createUserPlayer(PlayerJson playerJson ) throws ParseException {
+	public void createUserPlayer(BeneficiaryJson beneficiaryJson ) throws ParseException {
 		Account account = new Account();
-		account.setUsername(playerJson.getMail());
-		account.setPassword(passwordEncoder.encode(playerJson.getPassword()));
+		account.setUsername(beneficiaryJson.getMail());
+		account.setPassword(passwordEncoder.encode(beneficiaryJson.getPassword()));
 		account.setEnabled(true);
 		
 		Role role = roleDao.findByRole("player");
@@ -38,10 +38,10 @@ public class UserService {
 		roles.add(role);
 	
 		User user = new User();
-		user.setFirstname(playerJson.getFirstname());
-		user.setLastname(playerJson.getLastname());
-		user.setMail(playerJson.getMail());
-		user.setBirthdate(formatter.parse(playerJson.getBirthdate()));
+		user.setFirstname(beneficiaryJson.getFirstname());
+		user.setLastname(beneficiaryJson.getLastname());
+		user.setMail(beneficiaryJson.getMail());
+		user.setBirthdate(formatter.parse(beneficiaryJson.getBirthdate()));
 		user.setCreatedAt(new Date());
 		user.setRole(roles);
 		user.setAccount(account);

@@ -6,17 +6,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="game_type")
-public class GameType {
+@Table(name="")
+public class Country {
 
 	@Id
 	@Column(name="id")
-	public Integer id;
+	private Integer id;
 	
 	@Column(name="libelle")
-	public String libelle;
+	private Integer libelle;
 	
-	private GameType(){}
+	@Column(name="code")
+	private Integer code;
 
 	public Integer getId() {
 		return id;
@@ -26,11 +27,19 @@ public class GameType {
 		this.id = id;
 	}
 
-	public String getLibelle() {
+	public Integer getLibelle() {
 		return libelle;
 	}
 
-	public void setLibelle(String libelle) {
+	public void setLibelle(Integer libelle) {
 		this.libelle = libelle;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 }
