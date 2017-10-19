@@ -9,22 +9,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.indo.blockchain.model.Categorie;
-import com.indo.blockchain.repository.ICategorieDao;
+import com.indo.blockchain.model.Country;
+import com.indo.blockchain.repository.ICountryDao;
 
 @RestController
-@RequestMapping(value="/categorie")
-public class CategorieApi {
+@RequestMapping(value="/country")
+public class CountryApi {
 	
 	@Autowired
-	private ICategorieDao categorieDao;
-	
+	private ICountryDao countryDao;
+
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public ResponseEntity<List<Categorie>> getAllCategorie() {
-		List<Categorie> categories =categorieDao.findAll();
-		if(categories.isEmpty()){
-			return new ResponseEntity<List<Categorie>>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<List<Categorie>>(categories,HttpStatus.OK);
+	public ResponseEntity<List<Country>> getAllCountry(){
+		List<Country> countryList = countryDao.findAll();
+		return new ResponseEntity<List<Country>>(countryList,HttpStatus.OK);
 	}
 }
+ 

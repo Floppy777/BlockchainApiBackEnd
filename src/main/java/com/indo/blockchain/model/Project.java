@@ -34,6 +34,9 @@ public class Project {
 	@JoinColumn(name="categorie_id",referencedColumnName="id")
 	private Categorie categorie;
 	
+	@OneToOne(cascade = {CascadeType.MERGE},fetch = FetchType.EAGER)
+	@JoinColumn(name="country_id",referencedColumnName="id")
+	private Country country;
 	@Column(name="address")
 	private String address;
 	
@@ -71,7 +74,15 @@ public class Project {
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 	}
+	
+	public Country getCountry(){
+		return country;
+	}
 
+	public void setCountry(Country country){
+		this.country = country;
+	}
+	
 	public Categorie getCategorie() {
 		return categorie;
 	}

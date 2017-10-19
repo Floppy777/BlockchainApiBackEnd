@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.indo.blockchain.model.Country;
 
-public interface CountryDao extends JpaRepository<Country,Integer> {
+public interface ICountryDao extends JpaRepository<Country,Integer> {
 
 }

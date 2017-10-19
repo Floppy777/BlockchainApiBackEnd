@@ -2,15 +2,17 @@ package com.indo.blockchain.json;
 
 public class ProjectJson {
 
-	String name;
+	private String name;
 	
-	String description;
+	private String description;
 	
-	Integer montant;
+	private Integer montant;
 	
-	Integer duration;
+	private Integer duration;
 	
-	Integer categorie;	
+	private Integer categorie;	
+	
+	private Integer country;
 
 	public Integer getCategorie() {
 		return categorie;
@@ -18,6 +20,14 @@ public class ProjectJson {
 
 	public void setCategorie(Integer categorie) {
 		this.categorie = categorie;
+	}
+	
+	public Integer getCountry(){
+		return country;
+	}
+	
+	public void setCountry(Integer country){
+		this.country = country;
 	}
 
 	public String getName() {

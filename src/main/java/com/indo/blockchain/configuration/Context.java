@@ -11,6 +11,8 @@ public class Context {
 	private String blockchainUrl;
 	private Integer blockchainPort;
 	private String keystoreDirectory;
+	private String blockchainGasPrice;
+	private String blockchainGasLimit;
 	
 	public String getSmtpUrl() {
 		return smtpUrl;
@@ -42,6 +44,22 @@ public class Context {
 	
 	public void setKeystoreDirectory(String keystoreDirectory) {
 		this.keystoreDirectory = keystoreDirectory;
+	}
+	
+	public String getBlockchainGasPrice() {
+		return blockchainGasPrice;
+	}
+
+	public void setBlockchainGasPrice(String blockchainGasPrice) {
+		this.blockchainGasPrice = blockchainGasPrice;
+	}
+
+	public String getBlockchainGasLimit() {
+		return blockchainGasLimit;
+	}
+
+	public void setBlockchainGasLimit(String blockchainGasLimit) {
+		this.blockchainGasLimit = blockchainGasLimit;
 	}
 
 	@Override

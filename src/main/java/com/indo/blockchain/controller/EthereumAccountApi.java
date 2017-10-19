@@ -1,6 +1,6 @@
 package com.indo.blockchain.controller;
 
-import java.io.IOException;
+import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.web3j.crypto.WalletFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.indo.blockchain.json.EthereumAccountCreationJson;
-import com.indo.blockchain.json.WalletJson;
 import com.indo.blockchain.model.EthereumAccount;
 import com.indo.blockchain.model.User;
 import com.indo.blockchain.service.AuthenticationService;
@@ -45,7 +46,7 @@ public class EthereumAccountApi {
 		try {
 			ethereumAccountService.createEthereumAccount(user, ethereumAccountCreationJson.getPassword(),
 					ethereumAccountCreationJson.getPasswordConfirm());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -57,18 +58,20 @@ public class EthereumAccountApi {
 	 */
 
 	@RequestMapping(value = "/wallet/download", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> getWalletJson() {
+	public ResponseEntity<byte[]> getWalletJson() throws Exception{
 		User user = authenticationService.currentUserAuthenticated();
-		WalletJson walletJson = user.getEthereumAccount().getWallet();
-		String filename = walletJson.getAddress();
-		byte[] output = walletJson.toString().getBytes();
+		ObjectMapper mapper = new ObjectMapper();
+		WalletFile wallet = mapper.readValue(new File(user.getEthereumAccount().getFile()), WalletFile.class);
+
+		byte[] output = wallet.toString().getBytes();
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("charset", "utf-8");
 		responseHeaders.setContentType(MediaType.valueOf("text/html"));
 		responseHeaders.setContentLength(output.length);
-		responseHeaders.set("Content-disposition", "attachment; filename="+ filename +".json");
+		responseHeaders.set("Content-disposition", "attachment; filename=key.json");
 		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+
 	}
 
 }
