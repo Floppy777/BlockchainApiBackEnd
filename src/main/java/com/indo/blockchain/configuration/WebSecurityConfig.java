@@ -43,8 +43,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().and().authorizeRequests()
         .antMatchers(HttpMethod.OPTIONS,"**").permitAll()
-        .antMatchers("/categorie/all").anonymous()
-        .antMatchers("/project/paginable/all").anonymous()
+        .antMatchers("/categorie/all").permitAll()
+        .antMatchers("/country/all").permitAll()
+        .antMatchers("/blockchain/*").anonymous() // FOR TEST
+        .antMatchers("/project/paginable/all").permitAll()
         .antMatchers("/project/all/categorie/*").anonymous()
         .antMatchers("/project/all/name/*").anonymous()
 		.antMatchers("/login/*").anonymous()

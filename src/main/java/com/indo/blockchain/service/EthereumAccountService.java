@@ -18,7 +18,7 @@ import org.web3j.crypto.WalletFile;
 import org.web3j.crypto.WalletUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.indo.blockchain.configuration.Context;
+import com.indo.blockchain.configuration.BlockchainContext;
 import com.indo.blockchain.model.EthereumAccount;
 import com.indo.blockchain.model.User;
 import com.indo.blockchain.repository.IEthereumAccountRepository;
@@ -34,7 +34,7 @@ public class EthereumAccountService {
 	private IUserDao userDao;
 	
 	@Autowired
-	private Context context;
+	private BlockchainContext blockchainContext;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EthereumAccountService.class);
 		
@@ -44,7 +44,7 @@ public class EthereumAccountService {
 			return;
 		}
 
-		String keystoreDirectory = context.getKeystoreDirectory();
+		String keystoreDirectory = blockchainContext.getKeystoreDirectory();
 		String test = WalletUtils.generateFullNewWalletFile(walletPassword,new File(keystoreDirectory));
 		LOGGER.info("LOG : " + keystoreDirectory+"/"+test);
 		

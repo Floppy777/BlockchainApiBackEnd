@@ -1,5 +1,3 @@
-pragma solidity ^0.4.17; 
-
 contract Project { 
     
     address _owner; 
@@ -46,7 +44,7 @@ contract Project {
     }
     
     function enableProject() public onlyOwner {
-    	if(_state = State.NotEnabled){
+    	if(_state == State.NotEnabled){
     		_state = State.Active;
     	}
     }

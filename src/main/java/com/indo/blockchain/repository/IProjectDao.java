@@ -10,16 +10,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.indo.blockchain.model.Categorie;
+import com.indo.blockchain.model.Country;
 import com.indo.blockchain.model.Project;
 import com.indo.blockchain.model.User;
 
 @Repository
 public interface IProjectDao extends JpaRepository<Project, Integer> {
-
-	/*
-	 * select application FROM Application a join a.customer c join c.users u
-	 * where u.id = :userId
-	 */
 
 	@Query(value = "SELECT * FROM project WHERE project.user = :user", nativeQuery = true)
 	public List<Project> findByCreatedBy(@Param("user") User user);
@@ -34,7 +30,12 @@ public interface IProjectDao extends JpaRepository<Project, Integer> {
 	@Query("Select p from Project p WHERE" +
 			"(:name IS NULL or p.name LIKE '%'||:name||'%') AND "+ 
 			"(:address IS NULL or p.address LIKE '%'||:address||'%') AND " +
-			"(:categorie IS NULL or p.categorie = :categorie)")
-	Page<Project> findByAll(@Param("name") String name, @Param("address") String address,@Param("categorie") Categorie categorie, Pageable page);
+			"(:categorie IS NULL or p.categorie = :categorie) AND " + 
+			"(:country IS NULL or p.country = :country)")
+	Page<Project> findByAll(@Param("name") String name,
+							@Param("address") String address,
+							@Param("categorie") Categorie categorie,
+							@Param("country") Country country,
+							Pageable page);
 
 }

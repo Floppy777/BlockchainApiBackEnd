@@ -3,12 +3,15 @@ package com.indo.blockchain.service;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,11 +23,14 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Wallet;
 import org.web3j.crypto.WalletFile;
 import org.web3j.protocol.Web3j;
+import org.web3j.tx.ChainId;
+import org.web3j.tx.RawTransactionManager;
+import org.web3j.tx.TransactionManager;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.indo.blockchain.configuration.Context;
+import com.indo.blockchain.configuration.BlockchainContext;
 import com.indo.blockchain.ethereum.ProjectSmartContract;
 import com.indo.blockchain.json.ProjectJson;
 import com.indo.blockchain.model.Categorie;
@@ -35,8 +41,6 @@ import com.indo.blockchain.model.User;
 import com.indo.blockchain.repository.ICategorieDao;
 import com.indo.blockchain.repository.ICountryDao;
 import com.indo.blockchain.repository.IProjectDao;
-
-import ch.qos.logback.classic.Logger;
 
 @Service
 @Transactional
@@ -52,13 +56,15 @@ public class ProjectService {
 	private ICountryDao countryDao;
 
 	@Autowired
-	private Context context;
+	private BlockchainContext blockchainContext;
 	
 	@Autowired
 	private ObjectMapper mapper;
 	
 	@Autowired
 	private Web3j web3;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
 	
 	public void registerProject(ProjectJson projectJson,User user) throws JsonParseException, JsonMappingException, IOException, CipherException, InterruptedException, ExecutionException{
 		
@@ -76,27 +82,38 @@ public class ProjectService {
 		System.out.println(ethereumAccount.getPassword());
 		
 		// Va instancier le smart contract
-		BigInteger blockchainGasPrice = new BigInteger(context.getBlockchainGasPrice());
-		BigInteger blockchainGasLimit = new BigInteger(context.getBlockchainGasLimit());
+		BigInteger blockchainGasPrice = new BigInteger(blockchainContext.getGas().getPrice());
+		BigInteger blockchainGasLimit = new BigInteger(blockchainContext.getGas().getLimit());
 		Uint256 duration = new Uint256(projectJson.getDuration());
 		Uint256 amountWanted = new Uint256(projectJson.getMontant());
-        BigInteger eth = new BigInteger("1");
+        BigInteger eth = new BigInteger("0");
 		WalletFile walletFile = mapper.readValue(new File(ethereumAccount.getFile()),WalletFile.class);
 		ECKeyPair keyPair= Wallet.decrypt(ethereumAccount.getPassword(), walletFile);
 		Credentials credentials = Credentials.create(keyPair);
 		Future<ProjectSmartContract> projectSmartContract = ProjectSmartContract.deploy(web3, credentials, blockchainGasPrice, blockchainGasLimit, eth, duration, amountWanted);
-		System.out.println("WAITING SMART CONTRACT MINING");
-		projectSmartContract.get();
-		
-		/*
+		LOGGER.info("Waiting for Smart contract mining");
+		ProjectSmartContract p = projectSmartContract.get();
+		LOGGER.info("Contract Transaction Hash");
+		String addressInstanciate = p.getContractAddress();
+		LOGGER.info("Address : " + addressInstanciate);
+		String transactionHash = null;
+		if(p.getTransactionReceipt().isPresent()){
+			transactionHash = p.getTransactionReceipt().get().getTransactionHash();
+			LOGGER.info("Hash Transaction : " + transactionHash);
+		}		 
+		LOGGER.info("Duration " + p.getDuration().get());
+		LOGGER.info("Amount" + p.getAmountWanted().get());
+		// Sauvegarde l'instance dans la base de données 
 		Project project = new Project();
 		project.setAddress(addressInstanciate);
 		project.setCreatedBy(user);
+		project.setTransactionHash(transactionHash);
 		project.setDescription(projectJson.getDescription());
 		project.setName(projectJson.getName());
 		project.setCategorie(categorie);
+		project.setCountry(country);
+		project.setCreatedAt(new Date());
 		projectDao.save(project);
-		*/
 	}
 
 	public List<Project> getAllProject() {
@@ -116,11 +133,15 @@ public class ProjectService {
 		projectDao.delete(idProject);
 	}
 
-	public Page<Project> getPaginableList(Integer page, Integer nbResultPerPage, Integer categorie, String name,
+	public Page<Project> getPaginableList(Integer page, Integer nbResultPerPage, Integer categorieId,Integer countryId, String name,
 			String address) {
-		Categorie cat = null;
-		if (categorie != null) {
-			cat = categorieDao.findOne(categorie);
+		Categorie categorie = null;
+		Country country = null;
+		if (categorieId != null) {
+			categorie = categorieDao.findOne(categorieId);
+		}
+		if(countryId != null){
+			country = countryDao.findOne(countryId);
 		}
 		if (name != null && name.isEmpty()) {
 			name = null;
@@ -129,7 +150,7 @@ public class ProjectService {
 			address.isEmpty();
 		}
 		PageRequest request = new PageRequest(page - 1, nbResultPerPage);
-		Page<Project> project = projectDao.findByAll(name, address, cat, request);
+		Page<Project> project = projectDao.findByAll(name, address, categorie,country, request);
 		return project;
 	}
 

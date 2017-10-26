@@ -14,10 +14,10 @@ public class Country {
 	private Integer id;
 	
 	@Column(name="libelle")
-	private Integer libelle;
+	private String libelle;
 	
 	@Column(name="code")
-	private Integer code;
+	private String code;
 
 	public Integer getId() {
 		return id;
@@ -27,19 +27,24 @@ public class Country {
 		this.id = id;
 	}
 
-	public Integer getLibelle() {
+	public String getLibelle() {
 		return libelle;
 	}
 
-	public void setLibelle(Integer libelle) {
+	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
 
-	public Integer getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode(Integer code) {
+	public void setCode(String code) {
 		this.code = code;
+	}
+
+	@Override
+	public String toString() {
+		return "Country [id=" + id + ", libelle=" + libelle + ", code=" + code + "]";
 	}
 }
