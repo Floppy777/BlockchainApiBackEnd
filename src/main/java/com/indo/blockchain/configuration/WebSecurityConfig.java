@@ -47,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/country/all").permitAll()
         .antMatchers("/blockchain/*").anonymous() // FOR TEST
         .antMatchers("/project/paginable/all").permitAll()
+        .antMatchers("/project/depositMoney").anonymous()
         .antMatchers("/project/all/categorie/*").anonymous()
         .antMatchers("/project/all/name/*").anonymous()
 		.antMatchers("/login/*").anonymous()

@@ -2,6 +2,7 @@ package com.indo.blockchain.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -23,9 +24,7 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Wallet;
 import org.web3j.crypto.WalletFile;
 import org.web3j.protocol.Web3j;
-import org.web3j.tx.ChainId;
-import org.web3j.tx.RawTransactionManager;
-import org.web3j.tx.TransactionManager;
+import org.web3j.utils.Convert;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -33,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.indo.blockchain.configuration.BlockchainContext;
 import com.indo.blockchain.ethereum.ProjectSmartContract;
 import com.indo.blockchain.json.ProjectJson;
+import com.indo.blockchain.json.ProjectSendFundJson;
 import com.indo.blockchain.model.Categorie;
 import com.indo.blockchain.model.Country;
 import com.indo.blockchain.model.EthereumAccount;
@@ -114,6 +114,20 @@ public class ProjectService {
 		project.setCountry(country);
 		project.setCreatedAt(new Date());
 		projectDao.save(project);
+	}
+	
+	public void sendFundToProject(ProjectSendFundJson projectSendFundJson) throws Exception {
+		BigInteger blockchainGasPrice = new BigInteger(blockchainContext.getGas().getPrice());
+		BigInteger blockchainGasLimit = new BigInteger(blockchainContext.getGas().getLimit());
+
+		WalletFile walletFile = mapper.readValue(projectSendFundJson.getFile(),WalletFile.class);
+		ECKeyPair keyPair= Wallet.decrypt(projectSendFundJson.getPassword(), walletFile);
+		Credentials credentials = Credentials.create(keyPair);
+		ProjectSmartContract contract = ProjectSmartContract.load(projectSendFundJson.getAddress(), web3, credentials,
+				blockchainGasPrice, blockchainGasLimit);
+		BigInteger value = Convert.toWei(String.valueOf(projectSendFundJson.getMontant()), Convert.Unit.ETHER).toBigInteger();
+		LOGGER.info("Montant : " + value);
+		contract.depositMoneyToSmartContract(value);
 	}
 
 	public List<Project> getAllProject() {

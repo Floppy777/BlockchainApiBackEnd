@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.indo.blockchain.json.ProjectJson;
+import com.indo.blockchain.json.ProjectSendFundJson;
 import com.indo.blockchain.model.Project;
 import com.indo.blockchain.model.User;
 import com.indo.blockchain.repository.IProjectDao;
@@ -50,6 +51,18 @@ public class ProjectApi {
 		}
 	}
 	
+	@RequestMapping(value="/depositMoney",method = RequestMethod.POST)
+	public ResponseEntity<Void> sendMoneyToProject(@RequestBody ProjectSendFundJson projectSendFundJson){
+		try {
+			projectService.sendFundToProject(projectSendFundJson);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} catch(Exception e){
+			e.printStackTrace();
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+	}
+	
 	@RequestMapping(value="/all/categorie/{idCategorie}",method = RequestMethod.GET)
 	public ResponseEntity<List<Project>> getAllProjectByCategorie(@PathVariable("idCategorie") Integer categorie){
 		List<Project> listProject = projectService.getAllProjectByCategorie(categorie);
@@ -81,12 +94,6 @@ public class ProjectApi {
 																@RequestParam(value="country",required = false) Integer country,
 																@RequestParam(value="name",required = false) String name,
 																@RequestParam(value="address",required = false) String address){
-		System.out.println("Page : " + page);
-		System.out.println("NbResult : " + nbResultPerPage);
-		System.out.println("Categorie : " + categorie);
-		System.out.println("Country : " + country);
-		System.out.println("Name : " + name);
-		System.out.println("Address : " + address) ;
 		Page<Project> listPaginableProject = projectService.getPaginableList(page,nbResultPerPage,categorie,country,name,address);
 		return new ResponseEntity<Page<Project>>(listPaginableProject,HttpStatus.OK);
 	}
