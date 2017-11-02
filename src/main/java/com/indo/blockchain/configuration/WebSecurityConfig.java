@@ -60,12 +60,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public UserDetailsService userDetailsServiceBean() throws Exception {
 		return new AuthenticationService();
 	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
-	}
 	
 
 	@Bean

@@ -12,19 +12,21 @@ public class BeneficiaryJson {
 
 	private String firstname;
 
-	private String birthdate;
+	//private String birthdate;
+	
+	private String cellphoneNumber;
 
 	public BeneficiaryJson() {
 	}
 
-	public BeneficiaryJson(String mail, String password, String passwordConfirm, String lastname, String firstname,
-			String date) {
+	public BeneficiaryJson(String mail, String password, String passwordConfirm, String lastname, String firstname, String cellphoneNumber) {
 		this.mail = mail;
 		this.password = password;
 		this.passwordConfirm = passwordConfirm;
 		this.lastname = lastname;
 		this.firstname = firstname;
-		this.birthdate = date;
+		//this.birthdate = date;
+		this.cellphoneNumber = cellphoneNumber;
 	}
 
 	public String getMail() {
@@ -67,11 +69,11 @@ public class BeneficiaryJson {
 		this.firstname = firstname;
 	}
 
-	public String getBirthdate() {
-		return birthdate;
+	public String getCellphoneNumber() {
+		return cellphoneNumber;
 	}
 
-	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
+	public void setCellphoneNumber(String cellphoneNumber) {
+		this.cellphoneNumber = cellphoneNumber;
 	}
 }

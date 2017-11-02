@@ -48,8 +48,16 @@ public class LoginApi {
 		}
 		String base64EncodedPassword = Base64.getEncoder().encodeToString((loginCredentialJson.getUsername()+":"+loginCredentialJson.getPassword()).getBytes());
 		User user = userDao.findByUsername(username);
-		if(user.getAccount().getEnabled() == false){
-			System.out.println("Le compte est désactivé");
+		if(user.getAccount().getStatus().getId() == 1){
+			System.out.println("Le compte n'est pas vérifié");
+			return new ResponseEntity<UserJson>(HttpStatus.UNAUTHORIZED);
+		}
+		if(user.getAccount().getStatus().getId() == 3){
+			System.out.println("Le compte est suspendu");
+			return new ResponseEntity<UserJson>(HttpStatus.UNAUTHORIZED);
+		}
+		if(user.getAccount().getStatus().getId() == 4){
+			System.out.println("Le compte est bloqué");
 			return new ResponseEntity<UserJson>(HttpStatus.UNAUTHORIZED);
 		}
 		UserJson userJson = new UserJson(user,base64EncodedPassword);

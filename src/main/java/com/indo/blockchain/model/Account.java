@@ -1,10 +1,13 @@
 package com.indo.blockchain.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,9 +24,10 @@ public class Account {
 	
 	@Column(name="password")
 	private String password;
-
-	@Column(name="enabled")
-	private Boolean enabled;
+	
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name="status_id",referencedColumnName="id")
+	private Status status;
 	
 	public Account(){}
 	
@@ -31,7 +35,6 @@ public class Account {
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.enabled = true;
 	}
 	
 	public Integer getId() {
@@ -58,16 +61,16 @@ public class Account {
 		this.password = password;
 	}
 
-	public Boolean getEnabled() {
-		return enabled;
+	public Status getStatus() {
+		return status;
 	}
 
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override
 	public String toString() {
-		return "Account [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled + "]";
+		return "Account [id=" + id + ", username=" + username + ", password=" + password + ", status=" + status + "]";
 	}
 }

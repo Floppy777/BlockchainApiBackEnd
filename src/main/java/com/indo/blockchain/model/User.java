@@ -34,9 +34,8 @@ public class User {
 	@Column(name="mail")
 	private String mail;
 	
-	@Column(name="birthdate")
-	@Temporal(TemporalType.DATE)
-	private Date birthdate;
+	@Column(name="cellphone_number")
+	private String cellphoneNumber;
 	
 	@Column(name="created_at")
 	@Temporal(TemporalType.DATE)
@@ -97,14 +96,6 @@ public class User {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
-	public Date getBirthdate() {
-		return birthdate;
-	}
-
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
-	}
 
 	public Date getCreatedAt(){
 		return this.createdAt;
@@ -138,10 +129,18 @@ public class User {
 		this.ethereumAccount = ethereumAccount;
 	}
 
+	public String getCellphoneNumber() {
+		return cellphoneNumber;
+	}
+
+	public void setCellphoneNumber(String cellphoneNumber) {
+		this.cellphoneNumber = cellphoneNumber;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", lastname=" + lastname + ", firstname=" + firstname + ", mail=" + mail
-				+ ", birthdate=" + birthdate + ", createdAt=" + createdAt + ", role=" + role + ", account=" + account
-				+ ", ethereumAccount=" + ethereumAccount + "]";
+				+ ", cellphoneNumber=" + cellphoneNumber + ", createdAt=" + createdAt + ", role=" + role + ", account="
+				+ account + ", ethereumAccount=" + ethereumAccount + "]";
 	}
 }

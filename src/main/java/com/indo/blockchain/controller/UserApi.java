@@ -2,6 +2,8 @@ package com.indo.blockchain.controller;
 
 import java.text.ParseException;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,7 @@ public class UserApi {
 		try {
 			userService.createUserPlayer(beneficiaryJson);
 			return new ResponseEntity<Void>(HttpStatus.OK);
-		} catch (ParseException e) {
+		} catch (ParseException | MessagingException e ) {
 			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

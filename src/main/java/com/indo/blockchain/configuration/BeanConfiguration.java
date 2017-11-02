@@ -2,6 +2,8 @@ package com.indo.blockchain.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
@@ -18,6 +20,12 @@ public class BeanConfiguration {
 	@Bean
 	public ObjectMapper mapper() {
 		return new ObjectMapper();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
 	}
 }
 	
