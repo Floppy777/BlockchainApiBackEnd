@@ -22,79 +22,80 @@ import com.indo.blockchain.service.AuthenticationService;
 import com.indo.blockchain.service.ProjectService;
 
 @RestController
-@RequestMapping(value="/project")
+@RequestMapping(value = "/project")
 public class ProjectApi {
 
 	@Autowired
 	private IProjectDao projectDao;
-	
+
 	@Autowired
 	private AuthenticationService authenticationService;
-	
+
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public ResponseEntity<List<Project>> getAllProject(){
-		return new ResponseEntity<List<Project>>(projectDao.findAll(),HttpStatus.OK);
+	public ResponseEntity<List<Project>> getAllProject() {
+		return new ResponseEntity<List<Project>>(projectDao.findAll(), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public ResponseEntity<Void> registerProject(@RequestBody ProjectJson projectJson){
+	public ResponseEntity<Void> registerProject(@RequestBody ProjectJson projectJson) {
 		try {
 			User user = authenticationService.currentUserAuthenticated();
-			projectService.registerProject(projectJson,user);
+			projectService.registerProject(projectJson, user);
 			return new ResponseEntity<Void>(HttpStatus.OK);
-		}catch(Exception e ){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	@RequestMapping(value="/depositMoney",method = RequestMethod.POST)
-	public ResponseEntity<Void> sendMoneyToProject(@RequestBody ProjectSendFundJson projectSendFundJson){
+
+	@RequestMapping(value = "/depositMoney", method = RequestMethod.POST)
+	public ResponseEntity<Void> sendMoneyToProject(@RequestBody ProjectSendFundJson projectSendFundJson) {
 		try {
 			projectService.sendFundToProject(projectSendFundJson);
 			return new ResponseEntity<Void>(HttpStatus.OK);
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-			
 		}
 	}
-	
-	@RequestMapping(value="/all/categorie/{idCategorie}",method = RequestMethod.GET)
-	public ResponseEntity<List<Project>> getAllProjectByCategorie(@PathVariable("idCategorie") Integer categorie){
+
+	@RequestMapping(value = "/all/categorie/{idCategorie}", method = RequestMethod.GET)
+	public ResponseEntity<List<Project>> getAllProjectByCategorie(@PathVariable("idCategorie") Integer categorie) {
 		List<Project> listProject = projectService.getAllProjectByCategorie(categorie);
-		return new ResponseEntity<List<Project>>(listProject,HttpStatus.OK);
+		return new ResponseEntity<List<Project>>(listProject, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/{idProject}",method = RequestMethod.GET)
-	public ResponseEntity<Project> getOneProjectById(@PathVariable("idProject") Integer idProject){
+
+	@RequestMapping(value = "/{idProject}", method = RequestMethod.GET)
+	public ResponseEntity<Project> getOneProjectById(@PathVariable("idProject") Integer idProject) {
 		Project p = projectDao.findOne(idProject);
-		return new ResponseEntity<Project>(p,HttpStatus.OK);
+		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/all/name/{name}", method = RequestMethod.GET)
-	public ResponseEntity<List<Project>> getAllProjectByName(@PathVariable("name") String name){
+
+	@RequestMapping(value = "/all/name/{name}", method = RequestMethod.GET)
+	public ResponseEntity<List<Project>> getAllProjectByName(@PathVariable("name") String name) {
 		List<Project> listProject = projectService.getAllByName(name);
-		return new ResponseEntity<List<Project>>(listProject,HttpStatus.OK);
+		return new ResponseEntity<List<Project>>(listProject, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/{idProject}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteProject(@PathVariable("idProject") Integer idProject){
+
+	@RequestMapping(value = "/{idProject}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteProject(@PathVariable("idProject") Integer idProject) {
 		projectService.deleteProject(idProject);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/paginable/all", method = RequestMethod.GET)
-	public ResponseEntity<Page<Project>> getAllPaginableProject(@RequestParam("page") Integer page, 
-																@RequestParam("nbResultPerPage") Integer nbResultPerPage,
-																@RequestParam(value="categorie",required = false) Integer categorie,
-																@RequestParam(value="country",required = false) Integer country,
-																@RequestParam(value="name",required = false) String name,
-																@RequestParam(value="address",required = false) String address){
-		Page<Project> listPaginableProject = projectService.getPaginableList(page,nbResultPerPage,categorie,country,name,address);
-		return new ResponseEntity<Page<Project>>(listPaginableProject,HttpStatus.OK);
+	public ResponseEntity<Page<Project>> getAllPaginableProject(@RequestParam("page") Integer page,
+			@RequestParam("nbResultPerPage") Integer nbResultPerPage,
+			@RequestParam(value = "categorie", required = false) Integer categorie,
+			@RequestParam(value = "country", required = false) Integer country,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "address", required = false) String address) {
+		User user = authenticationService.currentUserAuthenticated();
+		Page<Project> listPaginableProject = projectService.getPaginableList(page, nbResultPerPage, categorie, country,
+				name, address,user);
+		return new ResponseEntity<Page<Project>>(listPaginableProject, HttpStatus.OK);
 	}
 }

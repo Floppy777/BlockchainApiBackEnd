@@ -59,7 +59,7 @@ public class UserService {
 		user.setAccount(account);
 		LOGGER.info("User = " + user);
 		//userDao.save(user);
-		mailService.sendMailCreateUser(beneficiaryJson.getMail());
+		mailService.sendMailCreateUser(beneficiaryJson);
 	}
 	
 	public User findByMail(String mail){

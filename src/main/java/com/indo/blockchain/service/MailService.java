@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.indo.blockchain.exception.BeneficiaryJson;
+
 @Service
 public class MailService {
 
@@ -18,19 +20,31 @@ public class MailService {
 	
 	private final static Logger LOGGER = Logger.getLogger(MailService.class);
 	
-	public void sendMailCreateUser(String mail) throws MessagingException{
-		LOGGER.info("Sender " + sender);
-		LOGGER.info("Mail to send : " + mail);
+	public void sendMailCreateUser(BeneficiaryJson beneficiaryJson) throws MessagingException{
+		
+		LOGGER.info("Mail to send : " + beneficiaryJson.getMail());
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("Bonjour " + beneficiaryJson.getFirstname() + " " + beneficiaryJson.getLastname() + " , ");
+		builder.append(System.getProperty("line.separator"));
+		builder.append("Vous venez de creer un compte chez BeeEther, Welcome Home");
+		
 		MimeMessage mimeMessage = sender.createMimeMessage();
-		mimeMessage.setFrom(new InternetAddress("test"));
-        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(mail));
-		mimeMessage.setSubject("Bonjour, Ceci est un test. LOL");
-		mimeMessage.setText("Test d envoi de mail");
+		mimeMessage.setFrom(new InternetAddress("contact"));
+        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(beneficiaryJson.getMail()));
+		mimeMessage.setSubject("Creation d'un utilisateur");
+		mimeMessage.setText(builder.toString());
 		sender.send(mimeMessage);
 		
 	}
 	
-	public void sendMailCreateWalletEthereum(){
-		
+	public void sendMailCreateWalletEthereum(String firstname, String lastname, String mail) throws MessagingException {
+		MimeMessage mimeMessage = sender.createMimeMessage();
+		mimeMessage.setFrom(new InternetAddress("contact"));
+        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(mail));
+		mimeMessage.setSubject("Creation d'un utilisateur");
+		mimeMessage.setText("Bonjour " + firstname + lastname + ", ");
+		mimeMessage.setText("Vous venez de creer un portefeuille virtuel");
+		sender.send(mimeMessage);
 	}
 }

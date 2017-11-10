@@ -148,7 +148,8 @@ public class ProjectService {
 	}
 
 	public Page<Project> getPaginableList(Integer page, Integer nbResultPerPage, Integer categorieId,Integer countryId, String name,
-			String address) {
+			String address, User user) {
+		LOGGER.info("User : " + user);
 		Categorie categorie = null;
 		Country country = null;
 		if (categorieId != null) {
@@ -164,7 +165,7 @@ public class ProjectService {
 			address.isEmpty();
 		}
 		PageRequest request = new PageRequest(page - 1, nbResultPerPage);
-		Page<Project> project = projectDao.findByAll(name, address, categorie,country, request);
+		Page<Project> project = projectDao.findByAll(name, address, categorie,country, user,request);
 		return project;
 	}
 

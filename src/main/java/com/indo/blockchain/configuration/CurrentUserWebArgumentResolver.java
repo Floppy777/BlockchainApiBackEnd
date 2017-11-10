@@ -37,12 +37,4 @@ public class CurrentUserWebArgumentResolver implements HandlerMethodArgumentReso
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	/*
-	@Override
-	public boolean supportsParameter(MethodParameter methodParameter) {
-		return methodParameter.getParameterAnnotation(AuthenticatedUser.class) != null
-				&& methodParameter.getParameterType().equals(User.class);
-	}*/
-
 }

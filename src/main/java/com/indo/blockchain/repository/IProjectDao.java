@@ -31,11 +31,13 @@ public interface IProjectDao extends JpaRepository<Project, Integer> {
 			"(:name IS NULL or p.name LIKE '%'||:name||'%') AND "+ 
 			"(:address IS NULL or p.address LIKE '%'||:address||'%') AND " +
 			"(:categorie IS NULL or p.categorie = :categorie) AND " + 
-			"(:country IS NULL or p.country = :country)")
+			"(:country IS NULL or p.country = :country) AND " +
+			"(:user IS NULL or p.createdBy =:user)") 
 	Page<Project> findByAll(@Param("name") String name,
 							@Param("address") String address,
 							@Param("categorie") Categorie categorie,
 							@Param("country") Country country,
+							@Param("user") User user,
 							Pageable page);
 
 }

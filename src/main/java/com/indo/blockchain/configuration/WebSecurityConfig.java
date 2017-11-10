@@ -47,11 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/country/all").permitAll()
         .antMatchers("/blockchain/*").anonymous() // FOR TEST
         .antMatchers("/project/paginable/all").permitAll()
+        .antMatchers("/ethereum/info/tx/*").permitAll()
         .antMatchers("/project/depositMoney").anonymous()
         .antMatchers("/project/all/categorie/*").anonymous()
         .antMatchers("/project/all/name/*").anonymous()
 		.antMatchers("/login/*").anonymous()
 		.antMatchers("/user/player/create").anonymous()
+		.antMatchers("/blockchain/informations").anonymous()
 		.anyRequest().authenticated();
 		//http.authorizeRequests().anyRequest().anonymous();
 	}

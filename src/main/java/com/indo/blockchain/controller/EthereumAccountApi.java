@@ -1,6 +1,7 @@
 package com.indo.blockchain.controller;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,14 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.web3j.crypto.WalletFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.indo.blockchain.json.AddressInfoJson;
+import com.indo.blockchain.json.CryptoInfoJson;
 import com.indo.blockchain.json.EthereumAccountCreationJson;
+import com.indo.blockchain.json.TransactionInfoJson;
 import com.indo.blockchain.model.EthereumAccount;
 import com.indo.blockchain.model.User;
 import com.indo.blockchain.service.AuthenticationService;
 import com.indo.blockchain.service.EthereumAccountService;
 
 @RestController
-@RequestMapping(value = "/ethereum/account")
+@RequestMapping(value = "/ethereum")
 public class EthereumAccountApi {
 
 	@Autowired
@@ -39,7 +43,7 @@ public class EthereumAccountApi {
 	/**
 	 * Permet de génerer un wallet eth
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/account/create", method = RequestMethod.POST)
 	public ResponseEntity<Void> createEthereumAccount(
 			@RequestBody EthereumAccountCreationJson ethereumAccountCreationJson) {
 		User user = authenticationService.currentUserAuthenticated();
@@ -51,6 +55,37 @@ public class EthereumAccountApi {
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	/**
+	 * Récupere des informations sur les cryptos
+	 */
+	@RequestMapping(value="/info", method = RequestMethod.GET)
+	public ResponseEntity<CryptoInfoJson> getCryptoInformations(){
+		CryptoInfoJson cryptoInfoJson = ethereumAccountService.getCryptoInformations();
+		return new ResponseEntity<CryptoInfoJson>(cryptoInfoJson,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/info/address/{address}",method = RequestMethod.GET)
+	public ResponseEntity<AddressInfoJson> getPublicAdressInformations(@PathVariable("address") String address){
+		try {
+			AddressInfoJson addressInfoJson = ethereumAccountService.getEthereumAdressInformations(address);
+			return new ResponseEntity<AddressInfoJson>(addressInfoJson,HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<AddressInfoJson>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value="/info/tx/{hash}",method = RequestMethod.GET)
+	public ResponseEntity<TransactionInfoJson> getTransactionInformations(@PathVariable("hash") String hash){
+		try {
+			TransactionInfoJson t = ethereumAccountService.getEthereumTransactionInformations(hash);
+			return new ResponseEntity<TransactionInfoJson>(t,HttpStatus.OK);
+		} catch (IOException e ){
+			e.printStackTrace();
+			return new ResponseEntity<TransactionInfoJson>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
